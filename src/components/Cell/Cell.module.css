@@ -1,6 +1,20 @@
 .root {
   width: 1em;
   height: 1em;
-  border: 0.1em solid rgb(218, 118, 12);
+  /* border: 0.1em solid rgb(218, 118, 12); */
   box-sizing: border-box;
+  background-color: white;
+  background-color: gray;
+}
+.uncovered {
+  background: transparent;
+}
+.color1 {
+  background-color: green;
+}
+.color2 {
+  background-color: yellow;
+}
+.color3 {
+  background-color: red;
 }

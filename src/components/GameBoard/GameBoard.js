@@ -5,6 +5,7 @@ class GameBoard extends Component {
   render() {
     return <div className={styles.root}>{this.renderCells()}</div>;
   }
+
   renderCells() {
     const { numberOfCells } = this.props;
     let cells = [];
