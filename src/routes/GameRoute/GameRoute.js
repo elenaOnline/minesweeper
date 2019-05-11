@@ -5,7 +5,7 @@ class GameRoute extends Component {
   render() {
     return (
       <div className={styles.root}>
-        <GameBoard numberOfCells={100} />
+        <GameBoard boardSize={10} />
       </div>
     );
   }

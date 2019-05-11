@@ -1,44 +1,46 @@
+/* eslint-disable jsx-a11y/accessible-emoji */
 import React, { Component } from 'react';
 import styles from './Cell.module.css';
 import cx from 'classnames';
 
 class Cell extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isUncovered: false,
-      color: 0,
-    };
-  }
-  handleClick = () => {
-    this.setState({
-      isUncovered: true,
-      color: this.state.color + 1,
-    });
+  static defaultProps = {
+    isBomb: false,
+    isCovered: true,
+    isFlagged: false,
+    numberNear: undefined,
+    index: undefined,
+  };
+  handleClick = ev => {
+    const { index } = this.props;
+    this.props.onClick && this.props.onClick({ index });
+    ev.stopPropogation && ev.stopPropogation();
   };
   render() {
-    const { color } = this.state;
-    let colorStyle;
-
-    switch (color) {
-      case 1:
-        colorStyle = styles.color1;
-        break;
-      case 2:
-        colorStyle = styles.color2;
-        break;
-      case 3:
-        colorStyle = styles.color3;
-        break;
-
-      default:
-        break;
-    }
+    const { isCovered } = this.props;
     return (
-      <div className={cx(styles.root, colorStyle)} onClick={this.handleClick} />
+      <div
+        className={cx(styles.root, isCovered && styles.isCovered)}
+        onClick={this.handleClick}
+      >
+        {this.renderInnards()}
+      </div>
     );
+  }
+  renderInnards() {
+    const { isCovered, isBomb } = this.props;
+
+    // show cover
+    if (isCovered) return null;
+
+    // show 'b' for bomb
+    if (isBomb) return this.renderBomb();
+
+    return null;
+  }
+  renderBomb() {
+    return <div>💣</div>;
   }
 }
 
 export default Cell;
-//TODO: covered or uncovered when clicked
