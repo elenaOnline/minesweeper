@@ -15,6 +15,7 @@ class Cell extends Component {
     const { index } = this.props;
     this.props.onClick && this.props.onClick({ index });
     ev.stopPropogation && ev.stopPropogation();
+    console.log('[DX][Cell] awdawd');
   };
   render() {
     const { isCovered } = this.props;

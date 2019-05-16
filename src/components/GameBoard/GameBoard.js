@@ -13,26 +13,45 @@ class GameBoard extends Component {
     if (!boardSize) return;
     const allCellsData = [];
     for (let c = 0; c < Math.pow(boardSize, 2); c++) {
-      if (c % 2 === 0) {
-        allCellsData.push({
-          isBomb: true,
-          isCovered: true,
-          isFlagged: false,
-          numberNear: undefined,
-          index: c,
-        });
-      } else {
-        allCellsData.push({
-          isBomb: false,
-          isCovered: true,
-          isFlagged: false,
-          numberNear: undefined,
-          index: c,
-        });
-      }
+      // if (c % 2 === 0) {
+      //   allCellsData.push({
+      //     isBomb: true,
+      //     isCovered: true,
+      //     isFlagged: false,
+      //     numberNear: undefined,
+      //     index: c,
+      //   });
+      // } else {
+      //   allCellsData.push({
+      //     isBomb: false,
+      //     isCovered: true,
+      //     isFlagged: false,
+      //     numberNear: undefined,
+      //     index: c,
+      //   });
+      // }
+      // let bombsNeeded = Math.ceil(Math.pow(boardSize, 2) / 10);
+      // while (bombsNeeded > 0) {
+      //   bombsNeeded--;
+      //   const putBombInThisCell = this.getRandomInt(boardSize, 0);
+      //   console.log('[DX][GameBoard] putBombInThisCell', putBombInThisCell);
+      // }
+    }
+    for (
+      let bombsNeeded = Math.ceil(Math.pow(boardSize, 2) / 10);
+      bombsNeeded >= 0;
+      bombsNeeded--
+    ) {
+      const putBombInThisCell = this.getRandomInt(boardSize, 0);
+      console.log(
+        '[DX][GameBoard] putBombInThisCell',
+        bombsNeeded,
+        putBombInThisCell
+      );
     }
     return allCellsData;
   }
+
   handleCellClick = payload => {
     const { index } = payload;
     const { allCellsData } = this.state;
@@ -48,6 +67,19 @@ class GameBoard extends Component {
 
     this.setState({ allCellsData });
   };
+
+  getRandomInt(max, min = 1) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  flipACoin(max, min) {
+    min = 0;
+    max = 1;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
   render() {
     return <div className={styles.root}>{this.renderCells()}</div>;
   }
