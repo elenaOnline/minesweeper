@@ -1,53 +1,42 @@
 import React, { Component } from 'react';
 import styles from './GameBoard.module.css';
 import Cell from '../Cell/Cell';
+import getRandomInt from '../../routes/utils/getRandomInt';
 class GameBoard extends Component {
   constructor(props) {
     super(props);
     this.state = {
       allCellsData: this.getAllCellData(props.boardSize),
-      name: 'bob',
     };
   }
   getAllCellData(boardSize) {
     if (!boardSize) return;
     const allCellsData = [];
-    for (let c = 0; c < Math.pow(boardSize, 2); c++) {
-      // if (c % 2 === 0) {
-      //   allCellsData.push({
-      //     isBomb: true,
-      //     isCovered: true,
-      //     isFlagged: false,
-      //     numberNear: undefined,
-      //     index: c,
-      //   });
-      // } else {
-      //   allCellsData.push({
-      //     isBomb: false,
-      //     isCovered: true,
-      //     isFlagged: false,
-      //     numberNear: undefined,
-      //     index: c,
-      //   });
-      // }
-      // let bombsNeeded = Math.ceil(Math.pow(boardSize, 2) / 10);
-      // while (bombsNeeded > 0) {
-      //   bombsNeeded--;
-      //   const putBombInThisCell = this.getRandomInt(boardSize, 0);
-      //   console.log('[DX][GameBoard] putBombInThisCell', putBombInThisCell);
-      // }
+    const numberOfCells = Math.pow(boardSize, 2);
+
+    //: CREATE DEFAULT DATA FOR ALL CELLS
+    for (let c = 0; c < numberOfCells; c++) {
+      allCellsData.push({
+        isBomb: false,
+        isCovered: true,
+        isFlagged: false,
+        numberNear: undefined,
+        index: c,
+      });
     }
-    for (
-      let bombsNeeded = Math.ceil(Math.pow(boardSize, 2) / 10);
-      bombsNeeded >= 0;
-      bombsNeeded--
-    ) {
-      const putBombInThisCell = this.getRandomInt(boardSize, 0);
-      console.log(
-        '[DX][GameBoard] putBombInThisCell',
-        bombsNeeded,
-        putBombInThisCell
-      );
+
+    //: ASSIGN BOMBS
+    let bombsNeeded = Math.ceil(numberOfCells / 10);
+    while (bombsNeeded > 0) {
+      // ROLL a random cell to try to put a bomb in
+      const randomCellIndex = getRandomInt(numberOfCells) - 1;
+      const currentCell = allCellsData[randomCellIndex];
+
+      // MAKE IT A BOMB -- if cell not a bomb already
+      if (!currentCell.isBomb) {
+        currentCell.isBomb = true;
+        bombsNeeded--;
+      }
     }
     return allCellsData;
   }
@@ -58,28 +47,16 @@ class GameBoard extends Component {
     const oneCellData = allCellsData[index];
     oneCellData.isCovered = false;
     if (oneCellData.isBomb) {
-      console.warn('[DX][GameBoard] BBOOOMM');
-
       allCellsData.forEach(aCellData => {
         aCellData.isCovered = false;
       });
     }
-
     this.setState({ allCellsData });
   };
 
-  getRandomInt(max, min = 1) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
+  /** D-UTILS */
 
-  flipACoin(max, min) {
-    min = 0;
-    max = 1;
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-
+  /** RENDERERS */
   render() {
     return <div className={styles.root}>{this.renderCells()}</div>;
   }
