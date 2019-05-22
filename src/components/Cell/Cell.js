@@ -15,7 +15,6 @@ class Cell extends Component {
     const { index } = this.props;
     this.props.onClick && this.props.onClick({ index });
     ev.stopPropogation && ev.stopPropogation();
-    console.log('[DX][Cell] awdawd');
   };
   render() {
     const { isCovered } = this.props;
@@ -29,7 +28,7 @@ class Cell extends Component {
     );
   }
   renderInnards() {
-    const { isCovered, isBomb } = this.props;
+    const { isCovered, isBomb, numberNear } = this.props;
 
     // show cover
     if (isCovered) return null;
@@ -37,10 +36,16 @@ class Cell extends Component {
     // show 'b' for bomb
     if (isBomb) return this.renderBomb();
 
+    if (numberNear) return this.renderNumber();
+
     return null;
   }
   renderBomb() {
     return <div>💣</div>;
+  }
+  renderNumber() {
+    const { numberNear } = this.props;
+    return <div>{numberNear}</div>;
   }
 }
 

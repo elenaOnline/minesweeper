@@ -3,6 +3,9 @@ import styles from './GameBoard.module.css';
 import Cell from '../Cell/Cell';
 import getRandomInt from '../../routes/utils/getRandomInt';
 class GameBoard extends Component {
+  static defaultProps = {
+    boardSize: 3,
+  };
   constructor(props) {
     super(props);
     this.state = {
@@ -41,16 +44,83 @@ class GameBoard extends Component {
     return allCellsData;
   }
 
-  handleCellClick = payload => {
+  uncoverAllBombs() {
+    const { allCellsData } = this.state;
+    allCellsData.forEach(aCellData => {
+      aCellData.isCovered = false;
+    });
+  }
+
+  checkSurroundingCells = payload => {
     const { index } = payload;
     const { allCellsData } = this.state;
-    const oneCellData = allCellsData[index];
-    oneCellData.isCovered = false;
-    if (oneCellData.isBomb) {
-      allCellsData.forEach(aCellData => {
-        aCellData.isCovered = false;
-      });
+    let howManySurroundingBombs = 0;
+    if (allCellsData[index + 1].isBomb) {
+      howManySurroundingBombs++;
+      this.setState = { howManySurroundingBombs };
     }
+    if (allCellsData[index - 1].isBomb) {
+      howManySurroundingBombs++;
+      this.setState = { howManySurroundingBombs };
+    }
+    if (allCellsData[index + this.boardSize].isBomb) {
+      howManySurroundingBombs++;
+      this.setState = { howManySurroundingBombs };
+    }
+    if (allCellsData[index + this.boardSize + 1].isBomb) {
+      howManySurroundingBombs++;
+      this.setState = { howManySurroundingBombs };
+    }
+    if (allCellsData[index + this.boardSize - 1].isBomb) {
+      howManySurroundingBombs++;
+      this.setState = { howManySurroundingBombs };
+    }
+    if (allCellsData[index - this.boardSize].isBomb) {
+      howManySurroundingBombs++;
+      this.setState = { howManySurroundingBombs };
+    }
+    if (allCellsData[index - this.boardSize + 1].isBomb) {
+      howManySurroundingBombs++;
+      this.setState = { howManySurroundingBombs };
+    }
+    if (allCellsData[index - this.boardSize - 1].isBomb) {
+      howManySurroundingBombs++;
+      this.setState = { howManySurroundingBombs };
+    }
+  };
+
+  handleCellClick = payload => {
+    const { index } = payload;
+    const { allCellsData, howManySurroundingBombs } = this.state;
+    const clickedCellData = allCellsData[index];
+    let isThisNumbered = false;
+
+    // uncover this cell
+    clickedCellData.isCovered = false;
+
+    // WAS BOMB
+    if (clickedCellData.isBomb) {
+      this.uncoverAllBombs();
+    }
+
+    // NOT BOMB
+    else {
+      isThisNumbered = true;
+      this.checkSurroundingCells();
+      // allCellsData.filter(data => data.isBomb).length
+
+      // WAS NUMBERED
+      if (isThisNumbered) {
+        // update cell data with number
+        clickedCellData.numberNear = howManySurroundingBombs;
+      }
+
+      // WAS EMPTY
+      else {
+      }
+    }
+
+    // update state so it renders
     this.setState({ allCellsData });
   };
 
