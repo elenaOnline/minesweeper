@@ -51,52 +51,139 @@ class GameBoard extends Component {
     });
   }
 
-  checkSurroundingCells = payload => {
-    const { index } = payload;
-    const { allCellsData } = this.state;
-    let howManySurroundingBombs = 0;
-    if (allCellsData[index + 1].isBomb) {
-      howManySurroundingBombs++;
-      this.setState = { howManySurroundingBombs };
-    }
-    if (allCellsData[index - 1].isBomb) {
-      howManySurroundingBombs++;
-      this.setState = { howManySurroundingBombs };
-    }
-    if (allCellsData[index + this.boardSize].isBomb) {
-      howManySurroundingBombs++;
-      this.setState = { howManySurroundingBombs };
-    }
-    if (allCellsData[index + this.boardSize + 1].isBomb) {
-      howManySurroundingBombs++;
-      this.setState = { howManySurroundingBombs };
-    }
-    if (allCellsData[index + this.boardSize - 1].isBomb) {
-      howManySurroundingBombs++;
-      this.setState = { howManySurroundingBombs };
-    }
-    if (allCellsData[index - this.boardSize].isBomb) {
-      howManySurroundingBombs++;
-      this.setState = { howManySurroundingBombs };
-    }
-    if (allCellsData[index - this.boardSize + 1].isBomb) {
-      howManySurroundingBombs++;
-      this.setState = { howManySurroundingBombs };
-    }
-    if (allCellsData[index - this.boardSize - 1].isBomb) {
-      howManySurroundingBombs++;
-      this.setState = { howManySurroundingBombs };
-    }
-  };
+  getSurroundingCells(fromCellIndex) {
+    // return an array of cellData items
+    // ex: starting with 5
+    // [{index:1...}, {index:2...}, {index:3...},
+    // [{index:4...},               {index:6...},
+    // [{index:7...}, {index:8...}, {index:9...}, ]
+    const { boardSize } = this.props;
+    const surroundCells = [];
+    const isLeft = this.isLeftColumn(fromCellIndex);
+    const isRight = this.isRightColumn(fromCellIndex);
+    const isTop = this.isTopRow(fromCellIndex);
+    const isBottom = this.isBottomRow(fromCellIndex);
 
+    // TL
+    !isLeft &&
+      !isTop &&
+      this._addIfFound(
+        surroundCells,
+        fromCellIndex,
+        fromCellIndex - boardSize - 1
+      );
+    //TC
+    !isTop &&
+      this._addIfFound(surroundCells, fromCellIndex, fromCellIndex - boardSize);
+    // TR
+    !isTop &&
+      !isRight &&
+      this._addIfFound(
+        surroundCells,
+        fromCellIndex,
+        fromCellIndex - boardSize + 1
+      );
+
+    // L
+    !isLeft &&
+      this._addIfFound(surroundCells, fromCellIndex, fromCellIndex - 1);
+    //R
+    !isRight &&
+      this._addIfFound(surroundCells, fromCellIndex, fromCellIndex + 1);
+
+    // BL
+    !isBottom &&
+      !isLeft &&
+      this._addIfFound(
+        surroundCells,
+        fromCellIndex,
+        fromCellIndex + boardSize - 1
+      );
+    // BC
+    !isBottom &&
+      this._addIfFound(surroundCells, fromCellIndex, fromCellIndex + boardSize);
+    // BR
+    !isBottom &&
+      !isRight &&
+      this._addIfFound(
+        surroundCells,
+        fromCellIndex,
+        fromCellIndex + boardSize + 1
+      );
+    return surroundCells;
+  }
+  _addIfFound(surroundCells, fromCellIndex, indexToCheck) {
+    const { allCellsData } = this.state;
+
+    // should I check this one
+    // using isTop...
+
+    if (allCellsData[indexToCheck]) {
+      surroundCells.push(allCellsData[indexToCheck]);
+    }
+  }
+  isTopRow(index) {
+    const { boardSize } = this.props;
+    return index < boardSize;
+  }
+  isBottomRow(index) {
+    const { boardSize } = this.props;
+    return index >= boardSize * (boardSize - 1);
+  }
+  isLeftColumn(index) {
+    const { boardSize } = this.props;
+    return index % boardSize === 0;
+  }
+  isRightColumn(index) {
+    const { boardSize } = this.props;
+    return index % boardSize === 9;
+  }
+  getNumberOfBombs(cellDataArray) {
+    if (!cellDataArray) return 0;
+    return cellDataArray.filter(data => data.isBomb).length;
+  }
+  setNumberNear(index) {
+    const { allCellsData } = this.state;
+    const clickedCellData = allCellsData[index];
+    if (!clickedCellData) return;
+
+    const surroundingCellsData = this.getSurroundingCells(index);
+    const bombCount = this.getNumberOfBombs(surroundingCellsData);
+    if (bombCount) {
+      clickedCellData.numberNear = bombCount;
+    }
+    return bombCount;
+  }
+  numberAndUncoverEmptyNeighbors(index) {
+    const { allCellsData } = this.state;
+    const cellData = allCellsData[index];
+    if (!cellData) return;
+    this.setNumberNear(index);
+
+    if (cellData.numberNear > 0 || cellData.isBomb || !cellData.isCovered)
+      return;
+
+    cellData.isCovered = false;
+
+    // get neighboring cells
+    const surroundingCells = this.getSurroundingCells(index);
+    if (!surroundingCells || surroundingCells.length === 0) return null;
+
+    const surroundingCoveredCells = surroundingCells.filter(
+      cell => cell.isCovered
+    );
+    if (!surroundingCoveredCells || surroundingCoveredCells.length === 0)
+      return null;
+
+    // call this function with each
+    surroundingCoveredCells.forEach(cell => {
+      this.numberAndUncoverEmptyNeighbors(cell.index);
+    });
+  }
   handleCellClick = payload => {
     const { index } = payload;
-    const { allCellsData, howManySurroundingBombs } = this.state;
+    const { allCellsData } = this.state;
     const clickedCellData = allCellsData[index];
-    let isThisNumbered = false;
-
-    // uncover this cell
-    clickedCellData.isCovered = false;
 
     // WAS BOMB
     if (clickedCellData.isBomb) {
@@ -105,20 +192,10 @@ class GameBoard extends Component {
 
     // NOT BOMB
     else {
-      isThisNumbered = true;
-      this.checkSurroundingCells();
-      // allCellsData.filter(data => data.isBomb).length
-
-      // WAS NUMBERED
-      if (isThisNumbered) {
-        // update cell data with number
-        clickedCellData.numberNear = howManySurroundingBombs;
-      }
-
-      // WAS EMPTY
-      else {
-      }
+      this.numberAndUncoverEmptyNeighbors(index);
     }
+
+    clickedCellData.isCovered = false;
 
     // update state so it renders
     this.setState({ allCellsData });

@@ -35,7 +35,6 @@ class Cell extends Component {
 
     // show 'b' for bomb
     if (isBomb) return this.renderBomb();
-
     if (numberNear) return this.renderNumber();
 
     return null;
