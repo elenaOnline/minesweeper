@@ -10,10 +10,17 @@ class Cell extends Component {
     isFlagged: false,
     numberNear: undefined,
     index: undefined,
+    onPress: undefined,
   };
   handleClick = ev => {
     const { index } = this.props;
-    this.props.onClick && this.props.onClick({ index });
+    this.props.onPress &&
+      this.props.onPress({
+        index,
+        isAlt: ev.altKey,
+        isControl: ev.ctrlKey,
+        isShift: ev.shiftKey,
+      });
     ev.stopPropogation && ev.stopPropogation();
   };
   render() {
@@ -28,12 +35,13 @@ class Cell extends Component {
     );
   }
   renderInnards() {
-    const { isCovered, isBomb, numberNear } = this.props;
+    const { isCovered, isBomb, numberNear, isFlagged } = this.props;
 
-    // show cover
+    // COVER ITEMS
+    if (isCovered && isFlagged) return this.renderFlag();
     if (isCovered) return null;
 
-    // show 'b' for bomb
+    // INSIDE ITEMS
     if (isBomb) return this.renderBomb();
     if (numberNear) return this.renderNumber();
 
@@ -41,6 +49,10 @@ class Cell extends Component {
   }
   renderBomb() {
     return <div>💣</div>;
+  }
+  renderFlag() {
+    return <div>☠</div>;
+    // return <div>🚩</div>;
   }
   renderNumber() {
     const { numberNear } = this.props;

@@ -1,12 +1,14 @@
 .root {
   width: 1em;
   height: 1em;
-  border: 0.1em solid rgb(218, 118, 12);
+  border: 0.03em solid var(--color__light);
   box-sizing: border-box;
   display: flex;
   justify-content: center;
   align-items: center;
+  color: green;
 }
 .isCovered {
-  background-color: purple;
+  /* background-color: #673ab7; */
+  background-color: var(--color__cover);
 }

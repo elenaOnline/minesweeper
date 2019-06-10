@@ -1,8 +1,21 @@
+:root {
+  --color__dark: rgba(85, 91, 110, 1);
+  --color__light: rgb(186, 189, 186);
+  --color__cover: rgba(0, 128, 128, 1);
+  --color__highlight: rgba(248, 90, 62, 1);
+  --color__lowlight: rgba(56, 97, 140, 1);
+}
 .root {
   height: 10em;
   width: 10em;
-  background-color: #008080;
+  background-color: var(--color__dark);
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  user-select: none;
 }
+/* $color1: rgba(85, 91, 110, 1);
+$color2: rgba(225, 230, 225, 1);
+$color3: rgba(0, 128, 128, 1);
+$color4: rgba(248, 90, 62, 1);
+$color5: rgba(56, 97, 140, 1); */
