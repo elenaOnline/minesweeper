@@ -1,18 +1,24 @@
 :root {
-  --color__dark: rgba(85, 91, 110, 1);
-  --color__light: rgb(186, 189, 186);
-  --color__cover: rgba(0, 128, 128, 1);
-  --color__highlight: rgba(248, 90, 62, 1);
-  --color__lowlight: rgba(56, 97, 140, 1);
+  --color__dark: rgb(1, 22, 39);
+  --color__light: rgb(207, 219, 213);
+  --color__cover: rgba(46, 196, 182);
+  --color__highlight: rgba(231, 29, 54);
+  --color__lowlight: rgba(254, 215, 102);
 }
 .root {
-  height: 10em;
-  width: 10em;
+  background: #ffffb8;
+  margin-left: 25%;
+  margin-right: 25%;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  height: 20em;
+  width: 20em;
   background-color: var(--color__dark);
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   user-select: none;
+  box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.3), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 /* $color1: rgba(85, 91, 110, 1);
 $color2: rgba(225, 230, 225, 1);

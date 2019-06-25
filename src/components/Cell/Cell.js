@@ -51,7 +51,7 @@ class Cell extends Component {
     return <div>💣</div>;
   }
   renderFlag() {
-    return <div>☠</div>;
+    return <div>🏁</div>;
     // return <div>🚩</div>;
   }
   renderNumber() {

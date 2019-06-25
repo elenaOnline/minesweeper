@@ -12,14 +12,19 @@ class GameBoard extends Component {
     super(props);
     this.state = {
       allCellsData: this.getAllCellData(props.boardSize),
+      totalNumberOfFlags: 0,
     };
+    console.log('[DX][GameBoard] this.props', this.props);
   }
 
   /** HANDLERS */
   handleCellClick = payload => {
     const { index, isShift } = payload;
     const { allCellsData } = this.state;
+    const { onCellClick, onCellExpanded } = this.props;
     const clickedCellData = allCellsData[index];
+
+    onCellClick && onCellClick();
 
     if (isShift) {
       this.flagCell(index);
@@ -29,12 +34,14 @@ class GameBoard extends Component {
     else if (clickedCellData.isBomb) {
       this.uncoverAllBombs();
       clickedCellData.isCovered = false;
+      this.loseScenario();
     }
 
     // NOT BOMB
     else {
       this.numberAndUncoverEmptyNeighbors(index);
       clickedCellData.isCovered = false;
+      onCellExpanded && onCellExpanded();
     }
 
     // update state so it renders
@@ -76,13 +83,23 @@ class GameBoard extends Component {
       aCellData.isCovered = false;
     });
   }
+  loseScenario() {
+    const { onGameloss } = this.props;
+    document.body.style.backgroundColor = 'navy';
+    document.body.style.transform = 'skewY(20deg)';
+    onGameloss && onGameloss();
+  }
   flagCell(index) {
-    const { allCellsData } = this.state;
+    const { allCellsData, totalNumberOfFlags } = this.state;
     const cellData = allCellsData[index];
+    let numberOfBombs = allCellsData.filter(data => data.isBomb).length;
     if (!cellData) return;
-    if (!cellData.isCovered) return;
+    if (!cellData.isCovered || totalNumberOfFlags >= numberOfBombs) return;
 
     cellData.isFlagged = !cellData.isFlagged;
+    this.setState({ totalNumberOfFlags: totalNumberOfFlags + 1 });
+    console.log('[DX][GameBoard] totalNumberOfFlags', totalNumberOfFlags);
+    // this.limitFlags(cellData);
   }
 
   /** IS-ERS */
@@ -208,7 +225,13 @@ class GameBoard extends Component {
   }
   getNumberOfBombs(cellDataArray) {
     if (!cellDataArray) return 0;
-    return cellDataArray.filter(data => data.isBomb).length;
+    const totalNumberOfBombs = cellDataArray.filter(data => data.isBomb).length;
+    return totalNumberOfBombs;
+  }
+  limitFlags(cellDataArray) {
+    if (this.totalNumberOfBombs.filter(total => total.isFlagged) >= 10) {
+      console.log('[DX][GameBoard] too many!');
+    }
   }
   setNumberNear(index) {
     const { allCellsData } = this.state;
@@ -237,6 +260,7 @@ class GameBoard extends Component {
       let data = allCellsData[c];
       cells.push(this.renderCell(c, data));
     }
+
     return cells;
   }
   renderCell(idx, data) {

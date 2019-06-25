@@ -1,12 +1,12 @@
 .root {
-  width: 1em;
-  height: 1em;
+  width: 2em;
+  height: 2em;
   border: 0.03em solid var(--color__light);
   box-sizing: border-box;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: green;
+  color: var(--color__highlight);
 }
 .isCovered {
   /* background-color: #673ab7; */
