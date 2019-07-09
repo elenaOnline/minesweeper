@@ -1,0 +1,14 @@
+.root {
+  width: 2em;
+  height: 2em;
+  border: 0.03em solid var(--color__light);
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--color__highlight);
+}
+.isCovered {
+  /* background-color: #673ab7; */
+  background-color: var(--color__cover);
+}

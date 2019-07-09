@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import styles from './GameBoard.module.css';
 import Cell from '../Cell/Cell';
 import getRandomInt from '../../routes/utils/getRandomInt';
+import WinScenario from '../WinScenario/WinScenario';
+import didWin from '../../appUtils/didWin';
+
 class GameBoard extends Component {
   static defaultProps = {
     boardSize: 3,
@@ -13,6 +16,7 @@ class GameBoard extends Component {
     this.state = {
       allCellsData: this.getAllCellData(props.boardSize),
       totalNumberOfFlags: 0,
+      gameIsVictory: false,
     };
     console.log('[DX][GameBoard] this.props', this.props);
   }
@@ -44,8 +48,10 @@ class GameBoard extends Component {
       onCellExpanded && onCellExpanded();
     }
 
+    const gameIsVictory = didWin(allCellsData);
+
     // update state so it renders
-    this.setState({ allCellsData });
+    this.setState({ allCellsData: allCellsData.slice(), gameIsVictory });
   };
 
   /** CELL WORKERS */
@@ -248,7 +254,20 @@ class GameBoard extends Component {
 
   /** RENDERERS */
   render() {
-    return <div className={styles.root}>{this.renderCells()}</div>;
+    return (
+      <div className={styles.root}>
+        {/* CELLS */}
+        {this.renderCells()}
+
+        {/* WIN SCREEN */}
+        {this.renderWinScreen()}
+      </div>
+    );
+  }
+  renderWinScreen() {
+    const { gameIsVictory } = this.state;
+    if (!gameIsVictory) return null;
+    return <WinScenario />;
   }
   renderCells() {
     const { allCellsData } = this.state;
