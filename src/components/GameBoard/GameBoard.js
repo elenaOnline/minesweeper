@@ -38,7 +38,6 @@ class GameBoard extends Component {
     else if (clickedCellData.isBomb) {
       this.uncoverAllBombs();
       clickedCellData.isCovered = false;
-      this.loseScenario();
     }
 
     // NOT BOMB
@@ -89,12 +88,6 @@ class GameBoard extends Component {
       aCellData.isCovered = false;
     });
   }
-  loseScenario() {
-    const { onGameloss } = this.props;
-    document.body.style.backgroundColor = 'navy';
-    document.body.style.transform = 'skewY(20deg)';
-    onGameloss && onGameloss();
-  }
   flagCell(index) {
     const { allCellsData, totalNumberOfFlags } = this.state;
     const cellData = allCellsData[index];
@@ -128,6 +121,7 @@ class GameBoard extends Component {
 
   /** HELPERS */
   getAllCellData(boardSize) {
+    console.log('[DX][GameBoard] onCellData');
     if (!boardSize) return;
     const allCellsData = [];
     const numberOfCells = Math.pow(boardSize, 2);
@@ -251,6 +245,15 @@ class GameBoard extends Component {
     }
     return bombCount;
   }
+  fullRestart = () => {
+    console.log('[DX][GameBoard] on restart');
+    this.setState({
+      allCellsData: this.getAllCellData(this.props.boardSize),
+      totalNumberOfFlags: 0,
+      gameIsVictory: false,
+    });
+    this.getAllCellData(this.props.boardSize);
+  };
 
   /** RENDERERS */
   render() {
@@ -261,6 +264,9 @@ class GameBoard extends Component {
 
         {/* WIN SCREEN */}
         {this.renderWinScreen()}
+
+        {/* RESTART BUTTON */}
+        {this.renderRestartButton()}
       </div>
     );
   }
@@ -284,6 +290,15 @@ class GameBoard extends Component {
   }
   renderCell(idx, data) {
     return <Cell key={idx} {...data} onPress={this.handleCellClick} />;
+  }
+  renderRestartButton() {
+    return (
+      <div>
+        <button type="button" onClick={this.fullRestart}>
+          Restart
+        </button>
+      </div>
+    );
   }
 }
 
