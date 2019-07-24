@@ -14,46 +14,17 @@ class GameRoute extends Component {
     super();
     this.scoreboardTimerId = undefined;
   }
+
+  /** INTERNALS */
   startScoreboardUpdate() {
     this.scoreboardTimerId = setInterval(() => {
       this.forceUpdate();
     }, 1000);
   }
-
   stopScoreboardUpdate() {
     clearInterval(this.scoreboardTimerId);
   }
-
-  handleFullRestart = () => {
-    this.setState({
-      // allCellsData: this.getAllCellData(this.props.boardSize),
-      // totalNumberOfFlags: 0,
-      // gameIsVictory: false,
-      startBoardTime: new Date(),
-      gameBoardId: this.state.gameBoardId + 1,
-    });
-    // this.getAllCellData(this.props.boardSize);
-  };
-
-  handleOnClick = () => {};
-  handleOnCellClick = () => {
-    const origCellClickCount = this.state.cellClickCounter;
-    const cellClickCount = origCellClickCount + 1;
-
-    // SAVE NEW COUNT TO STATE
-    this.setState({
-      cellClickCounter: cellClickCount,
-    });
-
-    // ONLY start stopwatch on first click
-    if (cellClickCount === 1) {
-      this.stopWatch();
-    }
-  };
-  handlePauseButtonPress = () => {
-    this.stopWatch();
-  };
-  stopWatch = () => {
+  startStopWatch = () => {
     // reverse
     const isPaused = !this.state.isPaused;
 
@@ -75,9 +46,34 @@ class GameRoute extends Component {
     });
   };
 
+  /** HANDLERS */
+  handleFullRestart = () => {
+    this.setState({
+      startBoardTime: new Date(),
+      gameBoardId: this.state.gameBoardId + 1,
+    });
+  };
+  handleOnCellClick = () => {
+    const origCellClickCount = this.state.cellClickCounter;
+    const cellClickCount = origCellClickCount + 1;
+
+    // SAVE NEW COUNT TO STATE
+    this.setState({
+      cellClickCounter: cellClickCount,
+    });
+
+    // ONLY start stopwatch on first click
+    if (cellClickCount === 1) {
+      this.startStopWatch();
+    }
+  };
+  handlePauseButtonPress = () => {
+    this.startStopWatch();
+  };
+
+  /** RENDERERS */
   render() {
     const {
-      handleOnClick,
       handleOnCellClick,
       handlePauseButtonPress,
       handleFullRestart,
@@ -99,7 +95,7 @@ class GameRoute extends Component {
       <div className={styles.root}>
         {this.renderGameOver()}
         <button onClick={handlePauseButtonPress}> PAUSE / PLAY </button>
-        <div onClick={handleOnClick}> {cellClickCounter} </div>
+        <div> {cellClickCounter} </div>
         <div> {secondsInApp} </div>
         <div> {secondsInBoard} </div>
 
