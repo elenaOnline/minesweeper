@@ -4,10 +4,15 @@ import Cell from '../Cell/Cell';
 import getRandomInt from '../../routes/utils/getRandomInt';
 import WinScenario from '../WinScenario/WinScenario';
 import didWin from '../../appUtils/didWin';
+import fullRestart from '../../appUtils/fullRestart';
 
 class GameBoard extends Component {
   static defaultProps = {
     boardSize: 3,
+    onCellClick: undefined,
+    onFullRestart: undefined,
+    timerstartAppTime: undefined,
+    timerStartBoardTime: undefined,
   };
 
   /** LIFECYCLE */
@@ -18,7 +23,6 @@ class GameBoard extends Component {
       totalNumberOfFlags: 0,
       gameIsVictory: false,
     };
-    console.log('[DX][GameBoard] this.props', this.props);
   }
 
   /** HANDLERS */
@@ -97,8 +101,6 @@ class GameBoard extends Component {
 
     cellData.isFlagged = !cellData.isFlagged;
     this.setState({ totalNumberOfFlags: totalNumberOfFlags + 1 });
-    console.log('[DX][GameBoard] totalNumberOfFlags', totalNumberOfFlags);
-    // this.limitFlags(cellData);
   }
 
   /** IS-ERS */
@@ -121,7 +123,6 @@ class GameBoard extends Component {
 
   /** HELPERS */
   getAllCellData(boardSize) {
-    console.log('[DX][GameBoard] onCellData');
     if (!boardSize) return;
     const allCellsData = [];
     const numberOfCells = Math.pow(boardSize, 2);
@@ -229,9 +230,9 @@ class GameBoard extends Component {
     return totalNumberOfBombs;
   }
   limitFlags(cellDataArray) {
-    if (this.totalNumberOfBombs.filter(total => total.isFlagged) >= 10) {
-      console.log('[DX][GameBoard] too many!');
-    }
+    // if (this.totalNumberOfBombs.filter(total => total.isFlagged) >= 10) {
+    // }
+    // NOOP
   }
   setNumberNear(index) {
     const { allCellsData } = this.state;
@@ -245,14 +246,15 @@ class GameBoard extends Component {
     }
     return bombCount;
   }
-  fullRestart = () => {
-    console.log('[DX][GameBoard] on restart');
+  HOLDfullRestart = () => {
     this.setState({
       allCellsData: this.getAllCellData(this.props.boardSize),
       totalNumberOfFlags: 0,
       gameIsVictory: false,
     });
     this.getAllCellData(this.props.boardSize);
+
+    this.props.onFullRestart && this.props.onFullRestart();
   };
 
   /** RENDERERS */
@@ -294,7 +296,7 @@ class GameBoard extends Component {
   renderRestartButton() {
     return (
       <div>
-        <button type="button" onClick={this.fullRestart}>
+        <button type="button" onClick={this.props.onFullRestart}>
           Restart
         </button>
       </div>

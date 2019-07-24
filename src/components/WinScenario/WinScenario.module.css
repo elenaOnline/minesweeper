@@ -1,11 +1,15 @@
 .root {
   position: absolute;
 
+  text-align: center;
+
   font-family: monospace;
 
-  FONT-SIZE: 5EM;
+  font-size: 5em;
 
   color: blanchedalmond;
+
+  text-shadow: 3px 2px rgb(0, 255, 242);
 
   background-color: rgba(33, 6, 109, 0.486);
 }

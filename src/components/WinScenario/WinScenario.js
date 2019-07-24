@@ -7,7 +7,7 @@ class WinScenario extends Component {
   render() {
     return (
       <div className={styles.root}>
-        <div>YOU DID WIN BRO</div>
+        <div>SUCCESS</div>
       </div>
     );
   }

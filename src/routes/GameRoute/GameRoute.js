@@ -6,6 +6,9 @@ class GameRoute extends Component {
     isGameOver: false,
     cellClickCounter: 0,
     isPaused: true,
+    startAppTime: undefined,
+    startBoardTime: undefined,
+    gameBoardId: 1,
   };
   constructor() {
     super();
@@ -21,9 +24,18 @@ class GameRoute extends Component {
     clearInterval(this.scoreboardTimerId);
   }
 
-  handleOnClick = () => {
-    console.log('[DX][GameRoute] ouch');
+  handleFullRestart = () => {
+    this.setState({
+      // allCellsData: this.getAllCellData(this.props.boardSize),
+      // totalNumberOfFlags: 0,
+      // gameIsVictory: false,
+      startBoardTime: new Date(),
+      gameBoardId: this.state.gameBoardId + 1,
+    });
+    // this.getAllCellData(this.props.boardSize);
   };
+
+  handleOnClick = () => {};
   handleOnCellClick = () => {
     const origCellClickCount = this.state.cellClickCounter;
     const cellClickCount = origCellClickCount + 1;
@@ -45,8 +57,6 @@ class GameRoute extends Component {
     // reverse
     const isPaused = !this.state.isPaused;
 
-    console.log('[DX][GameRoute] isPaused', isPaused);
-
     // do we start a stopwatch
     if (!isPaused) {
       this.startScoreboardUpdate();
@@ -59,32 +69,48 @@ class GameRoute extends Component {
 
     // save to state and re-render
     this.setState({
-      startTime: new Date(),
+      startAppTime: new Date(),
+      startBoardTime: new Date(),
       isPaused,
     });
   };
 
-  startCount = () => {
-    setTimeout(() => {
-      console.log(
-        '[DX][GameRoute] Date.now() - startTime',
-        Date.now() - this.state.startTime
-      );
-    }, 3000);
-  };
-
   render() {
-    const { handleOnClick, handleOnCellClick, handlePauseButtonPress } = this;
-    const { cellClickCounter } = this.state;
+    const {
+      handleOnClick,
+      handleOnCellClick,
+      handlePauseButtonPress,
+      handleFullRestart,
+    } = this;
+    const {
+      cellClickCounter,
+      startAppTime,
+      startBoardTime,
+      gameBoardId,
+    } = this.state;
     // display current elapsed time + previous elapsed time
-    const secondsPlayed = parseInt((new Date() - this.state.startTime) / 1000);
+    const secondsInApp = parseInt(
+      (new Date() - this.state.startAppTime) / 1000
+    );
+    const secondsInBoard = parseInt(
+      (new Date() - this.state.startBoardTime) / 1000
+    );
     return (
       <div className={styles.root}>
         {this.renderGameOver()}
         <button onClick={handlePauseButtonPress}> PAUSE / PLAY </button>
         <div onClick={handleOnClick}> {cellClickCounter} </div>
-        <div> {secondsPlayed} </div>
-        <GameBoard onCellClick={handleOnCellClick} boardSize={10} />
+        <div> {secondsInApp} </div>
+        <div> {secondsInBoard} </div>
+
+        <GameBoard
+          key={gameBoardId}
+          onCellClick={handleOnCellClick}
+          onFullRestart={handleFullRestart}
+          boardSize={10}
+          timerstartAppTime={startAppTime}
+          timerStartBoardTime={startBoardTime}
+        />
       </div>
     );
   }
