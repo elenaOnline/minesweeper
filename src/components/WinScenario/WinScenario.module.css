@@ -1,7 +1,13 @@
 .root {
-  position: absolute;
+  /* position: absolute;
 
-  text-align: center;
+  text-align: center; */
+
+  position: fixed; /* or absolute */
+
+  top: 40%;
+
+  left: 30%;
 
   font-family: monospace;
 

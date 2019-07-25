@@ -75,11 +75,9 @@ class GameRoute extends Component {
   render() {
     const {
       handleOnCellClick,
-      handlePauseButtonPress,
       handleFullRestart,
     } = this;
     const {
-      cellClickCounter,
       startAppTime,
       startBoardTime,
       gameBoardId,
@@ -94,10 +92,9 @@ class GameRoute extends Component {
     return (
       <div className={styles.root}>
         {this.renderGameOver()}
-        <button onClick={handlePauseButtonPress}> PAUSE / PLAY </button>
-        <div> {cellClickCounter} </div>
-        <div> {secondsInApp} </div>
-        <div> {secondsInBoard} </div>
+
+        <div className={styles.appTimer}> App Timer: {secondsInApp} </div>
+        <div className={styles.boardTimer}> Board Timer: {secondsInBoard} </div>
 
         <GameBoard
           key={gameBoardId}

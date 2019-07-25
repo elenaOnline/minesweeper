@@ -4,7 +4,7 @@ import Cell from '../Cell/Cell';
 import getRandomInt from '../../routes/utils/getRandomInt';
 import WinScenario from '../WinScenario/WinScenario';
 import didWin from '../../appUtils/didWin';
-import fullRestart from '../../appUtils/fullRestart';
+import LoseScenario from '../LoseScenario/LoseScenario';
 
 class GameBoard extends Component {
   static defaultProps = {
@@ -22,6 +22,7 @@ class GameBoard extends Component {
       allCellsData: this.getAllCellData(props.boardSize),
       totalNumberOfFlags: 0,
       gameIsVictory: false,
+      didLose: false,
     };
   }
 
@@ -40,6 +41,8 @@ class GameBoard extends Component {
 
     // WAS BOMB
     else if (clickedCellData.isBomb) {
+      this.setState({ didLose: true });
+      console.log('[DX][GameBoard] this.state.didLose', this.state.didLose);
       this.uncoverAllBombs();
       clickedCellData.isCovered = false;
     }
@@ -97,8 +100,9 @@ class GameBoard extends Component {
     const cellData = allCellsData[index];
     let numberOfBombs = allCellsData.filter(data => data.isBomb).length;
     if (!cellData) return;
-    if (!cellData.isCovered || totalNumberOfFlags >= numberOfBombs) return;
-
+    // LIMIT FLAGS
+    // if (!cellData.isCovered || totalNumberOfFlags >= numberOfBombs) return;
+    // NOOP
     cellData.isFlagged = !cellData.isFlagged;
     this.setState({ totalNumberOfFlags: totalNumberOfFlags + 1 });
   }
@@ -246,16 +250,6 @@ class GameBoard extends Component {
     }
     return bombCount;
   }
-  HOLDfullRestart = () => {
-    this.setState({
-      allCellsData: this.getAllCellData(this.props.boardSize),
-      totalNumberOfFlags: 0,
-      gameIsVictory: false,
-    });
-    this.getAllCellData(this.props.boardSize);
-
-    this.props.onFullRestart && this.props.onFullRestart();
-  };
 
   /** RENDERERS */
   render() {
@@ -267,15 +261,33 @@ class GameBoard extends Component {
         {/* WIN SCREEN */}
         {this.renderWinScreen()}
 
-        {/* RESTART BUTTON */}
-        {this.renderRestartButton()}
+        {/* LOSE SCREEN*/}
+        {this.renderFailScreen()}
       </div>
     );
   }
   renderWinScreen() {
     const { gameIsVictory } = this.state;
     if (!gameIsVictory) return null;
-    return <WinScenario />;
+
+    return (
+      <div>
+        {/* RESTART BUTTON */}
+        {this.renderRestartButton()}
+        <WinScenario />
+      </div>
+    );
+  }
+  renderFailScreen() {
+    const { didLose } = this.state;
+    if (!didLose) return null;
+    return (
+      <div>
+        {/* RESTART BUTTON */}
+        {this.renderRestartButton()}
+        <LoseScenario />
+      </div>
+    );
   }
   renderCells() {
     const { allCellsData } = this.state;
@@ -296,7 +308,11 @@ class GameBoard extends Component {
   renderRestartButton() {
     return (
       <div>
-        <button type="button" onClick={this.props.onFullRestart}>
+        <button
+          className={styles.restartButton}
+          type="button"
+          onClick={this.props.onFullRestart}
+        >
           Restart
         </button>
       </div>

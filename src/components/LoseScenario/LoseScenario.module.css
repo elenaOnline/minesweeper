@@ -1,0 +1,27 @@
+.root {
+  /* display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  position: absolute;
+
+  text-align: center; */
+
+  position: fixed; /* or absolute */
+
+  top: 40%;
+
+  left: 30%;
+
+  font-family: monospace;
+
+  font-size: 5em;
+
+  color: rgb(105, 105, 105);
+
+  text-shadow: 3px 2px rgb(252, 79, 79);
+
+  background-color: rgba(109, 6, 6, 0.486);
+}
