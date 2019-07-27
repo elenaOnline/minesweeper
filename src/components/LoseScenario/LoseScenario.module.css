@@ -11,9 +11,9 @@
 
   position: fixed; /* or absolute */
 
-  top: 40%;
+  top: 35%;
 
-  left: 30%;
+  left: 29.5%;
 
   font-family: monospace;
 
@@ -24,4 +24,9 @@
   text-shadow: 3px 2px rgb(252, 79, 79);
 
   background-color: rgba(109, 6, 6, 0.486);
+}
+
+.sadPartyParrot {
+  width: 1em;
+  margin-left: 39%;
 }

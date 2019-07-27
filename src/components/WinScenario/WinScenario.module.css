@@ -5,9 +5,9 @@
 
   position: fixed; /* or absolute */
 
-  top: 40%;
+  top: 35%;
 
-  left: 30%;
+  left: 29.5%;
 
   font-family: monospace;
 
@@ -18,4 +18,9 @@
   text-shadow: 3px 2px rgb(0, 255, 242);
 
   background-color: rgba(33, 6, 109, 0.486);
+}
+
+.partyParrot {
+  width: 1em;
+  margin-left: 39%;
 }

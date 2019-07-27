@@ -8,6 +8,11 @@ class WinScenario extends Component {
     return (
       <div className={styles.root}>
         <div>SUCCESS</div>
+        <img
+          className={styles.partyParrot}
+          src="https://railsgirlssummerofcode.org/img/blog/2016/l1ghtsab3r-partyparrot.gif"
+          alt=""
+        />
       </div>
     );
   }
