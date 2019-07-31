@@ -5,6 +5,7 @@ import getRandomInt from '../../routes/utils/getRandomInt';
 import WinScenario from '../WinScenario/WinScenario';
 import didWin from '../../appUtils/didWin';
 import LoseScenario from '../LoseScenario/LoseScenario';
+import GameRoute from '../../routes/GameRoute/GameRoute';
 
 class GameBoard extends Component {
   static defaultProps = {
@@ -25,6 +26,10 @@ class GameBoard extends Component {
       didLose: false,
     };
   }
+  componentDidMount() {
+    window.win = this.forceWin;
+    window.lose = this.forceLose;
+  }
 
   /** HANDLERS */
   handleCellClick = payload => {
@@ -41,10 +46,13 @@ class GameBoard extends Component {
 
     // WAS BOMB
     else if (clickedCellData.isBomb) {
-      this.setState({ didLose: true });
-      console.log('[DX][GameBoard] this.state.didLose', this.state.didLose);
-      this.uncoverAllBombs();
-      clickedCellData.isCovered = false;
+      this.doLose();
+
+      // this.setState({ didLose: true });
+      // console.log('[DX][GameBoard] this.state.didLose', this.state.didLose);
+      // if()
+      // this.uncoverAllBombs();
+      // clickedCellData.isCovered = false;
     }
 
     // NOT BOMB
@@ -54,8 +62,11 @@ class GameBoard extends Component {
       onCellExpanded && onCellExpanded();
     }
 
+    // const gameIsVictory = true;
     const gameIsVictory = didWin(allCellsData);
-
+    if (gameIsVictory) {
+      this.doWin();
+    }
     // update state so it renders
     this.setState({ allCellsData: allCellsData.slice(), gameIsVictory });
   };
@@ -250,19 +261,35 @@ class GameBoard extends Component {
     }
     return bombCount;
   }
+  forceWin = () => {
+    this.doWin();
+  };
+  forceLose = () => {
+    this.doLose();
+  };
+  doWin() {
+    this.props.onWin && this.props.onWin();
+    this.setState({ didLose: false, gameIsVictory: true });
+  }
+  doLose() {
+    this.props.onLose && this.props.onLose();
+    this.uncoverAllBombs();
+    this.setState({ didLose: true, gameIsVictory: false });
+  }
 
   /** RENDERERS */
   render() {
     return (
       <div className={styles.root}>
+        {/* <GameRoute /> */}
         {/* CELLS */}
         {this.renderCells()}
 
         {/* WIN SCREEN */}
-        {this.renderWinScreen()}
+        {/* {this.renderWinScreen()} */}
 
         {/* LOSE SCREEN*/}
-        {this.renderFailScreen()}
+        {/* {this.renderFailScreen()} */}
       </div>
     );
   }

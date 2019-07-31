@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import styles from './GameRoute.module.css';
 import GameBoard from '../../components/GameBoard/GameBoard';
+import WinScenario from '../../components/WinScenario/WinScenario';
+import LoseScenario from '../../components/LoseScenario/LoseScenario';
 class GameRoute extends Component {
   state = {
     isGameOver: false,
@@ -9,6 +11,8 @@ class GameRoute extends Component {
     startAppTime: undefined,
     startBoardTime: undefined,
     gameBoardId: 1,
+    didWin: false,
+    didLose: false,
   };
   constructor() {
     super();
@@ -51,6 +55,8 @@ class GameRoute extends Component {
     this.setState({
       startBoardTime: new Date(),
       gameBoardId: this.state.gameBoardId + 1,
+      didWin: false,
+      didLose: false,
     });
   };
   handleOnCellClick = () => {
@@ -70,18 +76,23 @@ class GameRoute extends Component {
   handlePauseButtonPress = () => {
     this.startStopWatch();
   };
+  handleOnWin = () => {
+    console.log('[DX][GameRoute] hello');
+    this.setState({ didWin: true });
+  };
+  handleOnLose = () => {
+    this.setState({ didLose: true });
+  };
 
   /** RENDERERS */
   render() {
     const {
       handleOnCellClick,
       handleFullRestart,
+      handleOnWin,
+      handleOnLose,
     } = this;
-    const {
-      startAppTime,
-      startBoardTime,
-      gameBoardId,
-    } = this.state;
+    const { startAppTime, startBoardTime, gameBoardId } = this.state;
     // display current elapsed time + previous elapsed time
     const secondsInApp = parseInt(
       (new Date() - this.state.startAppTime) / 1000
@@ -103,7 +114,44 @@ class GameRoute extends Component {
           boardSize={10}
           timerstartAppTime={startAppTime}
           timerStartBoardTime={startBoardTime}
+          onWin={handleOnWin}
+          onLose={handleOnLose}
         />
+        {this.renderWin()}
+        {this.renderLose()}
+      </div>
+    );
+  }
+  renderRestartButton() {
+    return (
+      <div>
+        <button
+          className={styles.restartButton}
+          type="button"
+          onClick={this.handleFullRestart}
+        >
+          Restart
+        </button>
+      </div>
+    );
+  }
+  renderWin() {
+    const { didWin } = this.state;
+    if (!didWin) return null;
+    return (
+      <div>
+        <WinScenario />
+        {this.renderRestartButton()}
+      </div>
+    );
+  }
+  renderLose() {
+    const { didLose } = this.state;
+    if (!didLose) return null;
+    return (
+      <div>
+        <LoseScenario />
+        {this.renderRestartButton()}
       </div>
     );
   }
