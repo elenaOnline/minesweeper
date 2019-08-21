@@ -297,13 +297,7 @@ class GameBoard extends Component {
     const { gameIsVictory } = this.state;
     if (!gameIsVictory) return null;
 
-    return (
-      <div>
-        {/* RESTART BUTTON */}
-        {this.renderRestartButton()}
-        <WinScenario />
-      </div>
-    );
+    return <div className={styles.win} />;
   }
   renderFailScreen() {
     const { didLose } = this.state;
