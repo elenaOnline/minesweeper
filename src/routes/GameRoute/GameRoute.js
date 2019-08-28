@@ -103,9 +103,13 @@ class GameRoute extends Component {
     return (
       <div className={styles.root}>
         {this.renderGameOver()}
-
-        <div className={styles.appTimer}> App Timer: {secondsInApp} </div>
-        <div className={styles.boardTimer}> Board Timer: {secondsInBoard} </div>
+        <div className={styles.timers}>
+          <div className={styles.appTimer}> App Timer: {secondsInApp} </div>
+          <div className={styles.boardTimer}>
+            {' '}
+            Board Timer: {secondsInBoard}{' '}
+          </div>
+        </div>
 
         <GameBoard
           key={gameBoardId}

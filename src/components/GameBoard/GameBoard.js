@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 import styles from './GameBoard.module.css';
 import Cell from '../Cell/Cell';
 import getRandomInt from '../../routes/utils/getRandomInt';
-import WinScenario from '../WinScenario/WinScenario';
 import didWin from '../../appUtils/didWin';
 import LoseScenario from '../LoseScenario/LoseScenario';
-import GameRoute from '../../routes/GameRoute/GameRoute';
 
 class GameBoard extends Component {
   static defaultProps = {
@@ -109,7 +107,7 @@ class GameBoard extends Component {
   flagCell(index) {
     const { allCellsData, totalNumberOfFlags } = this.state;
     const cellData = allCellsData[index];
-    let numberOfBombs = allCellsData.filter(data => data.isBomb).length;
+    // let numberOfBombs = allCellsData.filter(data => data.isBomb).length;
     if (!cellData) return;
     // LIMIT FLAGS
     // if (!cellData.isCovered || totalNumberOfFlags >= numberOfBombs) return;
