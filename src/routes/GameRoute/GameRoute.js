@@ -13,6 +13,7 @@ class GameRoute extends Component {
     gameBoardId: 1,
     didWin: false,
     didLose: false,
+    shouldShowIntro: true,
   };
   constructor() {
     super();
@@ -48,6 +49,10 @@ class GameRoute extends Component {
       startBoardTime: new Date(),
       isPaused,
     });
+  };
+
+  removeIntroButton = () => {
+    this.setState({ shouldShowIntro: false });
   };
 
   /** HANDLERS */
@@ -110,6 +115,7 @@ class GameRoute extends Component {
             Board Timer: {secondsInBoard}{' '}
           </div>
         </div>
+        {this.renderGameIntro()}
 
         <GameBoard
           key={gameBoardId}
@@ -123,6 +129,23 @@ class GameRoute extends Component {
         />
         {this.renderWin()}
         {this.renderLose()}
+      </div>
+    );
+  }
+  renderGameIntro() {
+    if (this.state.shouldShowIntro === false) {
+      return;
+    }
+    return (
+      <div className={styles.gameIntro}>
+        Shift Click Squares You Want To Flag!
+        <button
+          className={styles.introButton}
+          type="button"
+          onClick={this.removeIntroButton}
+        >
+          Got It!
+        </button>
       </div>
     );
   }
