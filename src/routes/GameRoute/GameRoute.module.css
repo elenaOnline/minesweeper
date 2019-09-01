@@ -2,11 +2,12 @@
   font-size: 2em;
 }
 
-.timers {
-  background-color: rgba(120, 0, 168, 0.205);
+.hud {
+  display: flex;
+  background-color: rgba(250, 253, 70, 0.473);
   font-size: 0.5em;
   padding: 1em;
-  padding-left: 44%;
+  padding-left: 27%;
   padding-right: 2em;
   font-family: monospace;
 }
@@ -27,21 +28,39 @@
   font-size: 0.85em;
   border: black;
   margin-left: 1.5em;
-  background-color: yellow;
+  background-color: rgb(250, 253, 70);
   border-radius: 5px;
 }
-/* .appTimer {
-  font-size: 0.5em;
-  padding: 1em;
-  font-family: monospace;
+.appTimer {
+  border-width: 4px;
+  border-color: #717171;
+  border-style: ridge;
+  padding-right: 1em;
+  padding-left: 1em;
 }
 
 .boardTimer {
-  font-size: 0.5em;
-  padding: 1em;
-  font-family: monospace;
-} */
+  border-width: 4px;
+  border-color: #717171;
+  border-style: ridge;
+  padding-right: 1em;
+  padding-left: 1em;
+}
 
+.winCount {
+  border-width: 4px;
+  border-color: #717171;
+  border-style: ridge;
+  padding-right: 1em;
+  padding-left: 1em;
+}
+.lossCount {
+  border-width: 4px;
+  border-color: #717171;
+  border-style: ridge;
+  padding-right: 1em;
+  padding-left: 1em;
+}
 .restartButton {
   font-size: 0.75em;
   border-radius: 4px;

@@ -14,6 +14,8 @@ class GameRoute extends Component {
     didWin: false,
     didLose: false,
     shouldShowIntro: true,
+    totalWins: 0,
+    totalLosses: 0,
   };
   constructor() {
     super();
@@ -83,10 +85,10 @@ class GameRoute extends Component {
   };
   handleOnWin = () => {
     console.log('[DX][GameRoute] hello');
-    this.setState({ didWin: true });
+    this.setState({ didWin: true, totalWins: this.state.totalWins + 1 });
   };
   handleOnLose = () => {
-    this.setState({ didLose: true });
+    this.setState({ didLose: true, totalLosses: this.state.totalLosses + 1 });
   };
 
   /** RENDERERS */
@@ -97,7 +99,13 @@ class GameRoute extends Component {
       handleOnWin,
       handleOnLose,
     } = this;
-    const { startAppTime, startBoardTime, gameBoardId } = this.state;
+    const {
+      startAppTime,
+      startBoardTime,
+      gameBoardId,
+      totalWins,
+      totalLosses,
+    } = this.state;
     // display current elapsed time + previous elapsed time
     const secondsInApp = parseInt(
       (new Date() - this.state.startAppTime) / 1000
@@ -108,7 +116,10 @@ class GameRoute extends Component {
     return (
       <div className={styles.root}>
         {this.renderGameOver()}
-        <div className={styles.timers}>
+
+        <div className={styles.hud}>
+          <div className={styles.winCount}> Total Wins: {totalWins} </div>
+          <div className={styles.lossCount}> Total Losses: {totalLosses} </div>
           <div className={styles.appTimer}> App Timer: {secondsInApp} </div>
           <div className={styles.boardTimer}>
             {' '}
