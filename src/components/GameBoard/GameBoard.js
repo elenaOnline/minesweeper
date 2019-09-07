@@ -12,6 +12,8 @@ class GameBoard extends Component {
     onFullRestart: undefined,
     timerstartAppTime: undefined,
     timerStartBoardTime: undefined,
+    winIsTrue: false,
+    loseIsTrue: false,
   };
 
   /** LIFECYCLE */
@@ -22,6 +24,7 @@ class GameBoard extends Component {
       totalNumberOfFlags: 0,
       gameIsVictory: false,
       didLose: false,
+      isClickable: true,
     };
   }
   componentDidMount() {
@@ -32,41 +35,46 @@ class GameBoard extends Component {
   /** HANDLERS */
   handleCellClick = payload => {
     const { index, isShift } = payload;
-    const { allCellsData } = this.state;
+    const { allCellsData, winIsTrue, loseIsTrue } = this.state;
     const { onCellClick, onCellExpanded } = this.props;
     const clickedCellData = allCellsData[index];
 
     onCellClick && onCellClick();
+    if (this.state.isClickable) {
+      if (isShift) {
+        this.flagCell(index);
+      }
 
-    if (isShift) {
-      this.flagCell(index);
+      // WAS BOMB
+      else if (clickedCellData.isBomb) {
+        this.doLose();
+        this.setState({ loseIsTrue: true });
+
+        // this.setState({ didLose: true });
+        // console.log('[DX][GameBoard] this.state.didLose', this.state.didLose);
+        // if()
+        // this.uncoverAllBombs();
+        // clickedCellData.isCovered = false;
+      } else if (clickedCellData.isFlagged || winIsTrue || loseIsTrue) {
+        return;
+      }
+
+      // NOT BOMB
+      else {
+        this.numberAndUncoverEmptyNeighbors(index);
+        clickedCellData.isCovered = false;
+        onCellExpanded && onCellExpanded();
+      }
+
+      // const gameIsVictory = true;
+      const gameIsVictory = didWin(allCellsData);
+      if (gameIsVictory) {
+        this.doWin();
+        this.setState({ loseIsTrue: true });
+      }
+      // update state so it renders
+      this.setState({ allCellsData: allCellsData.slice(), gameIsVictory });
     }
-
-    // WAS BOMB
-    else if (clickedCellData.isBomb) {
-      this.doLose();
-
-      // this.setState({ didLose: true });
-      // console.log('[DX][GameBoard] this.state.didLose', this.state.didLose);
-      // if()
-      // this.uncoverAllBombs();
-      // clickedCellData.isCovered = false;
-    }
-
-    // NOT BOMB
-    else {
-      this.numberAndUncoverEmptyNeighbors(index);
-      clickedCellData.isCovered = false;
-      onCellExpanded && onCellExpanded();
-    }
-
-    // const gameIsVictory = true;
-    const gameIsVictory = didWin(allCellsData);
-    if (gameIsVictory) {
-      this.doWin();
-    }
-    // update state so it renders
-    this.setState({ allCellsData: allCellsData.slice(), gameIsVictory });
   };
 
   /** CELL WORKERS */
@@ -267,7 +275,7 @@ class GameBoard extends Component {
   };
   doWin() {
     this.props.onWin && this.props.onWin();
-    this.setState({ didLose: false, gameIsVictory: true });
+    this.setState({ didLose: false, gameIsVictory: true, isClickable: false });
   }
   doLose() {
     this.props.onLose && this.props.onLose();
@@ -299,6 +307,7 @@ class GameBoard extends Component {
   }
   renderFailScreen() {
     const { didLose } = this.state;
+
     if (!didLose) return null;
     return (
       <div>

@@ -33,7 +33,7 @@ class GameRoute extends Component {
   }
   startStopWatch = () => {
     // reverse
-    const isPaused = !this.state.isPaused;
+    let isPaused = !this.state.isPaused;
 
     // do we start a stopwatch
     if (!isPaused) {
@@ -79,10 +79,10 @@ class GameRoute extends Component {
     if (cellClickCount === 1) {
       this.startStopWatch();
     }
+
+    this.removeIntroButton();
   };
-  handlePauseButtonPress = () => {
-    this.startStopWatch();
-  };
+
   handleOnWin = () => {
     console.log('[DX][GameRoute] hello');
     this.setState({ didWin: true, totalWins: this.state.totalWins + 1 });

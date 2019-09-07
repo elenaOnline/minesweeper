@@ -4,7 +4,7 @@
 
 .hud {
   display: flex;
-  background-color: rgba(250, 253, 70, 0.473);
+  /* background-color: rgba(250, 253, 70, 0.473); */
   font-size: 0.5em;
   padding: 1em;
   padding-left: 27%;
