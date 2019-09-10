@@ -2,12 +2,18 @@ import React, { Component } from 'react';
 import styles from './GameBoard.module.css';
 import Cell from '../Cell/Cell';
 import getRandomInt from '../../routes/utils/getRandomInt';
-import WinScenario from '../WinScenario/WinScenario';
 import didWin from '../../appUtils/didWin';
+import LoseScenario from '../LoseScenario/LoseScenario';
 
 class GameBoard extends Component {
   static defaultProps = {
     boardSize: 3,
+    onCellClick: undefined,
+    onFullRestart: undefined,
+    timerstartAppTime: undefined,
+    timerStartBoardTime: undefined,
+    winIsTrue: false,
+    loseIsTrue: false,
   };
 
   /** LIFECYCLE */
@@ -17,40 +23,58 @@ class GameBoard extends Component {
       allCellsData: this.getAllCellData(props.boardSize),
       totalNumberOfFlags: 0,
       gameIsVictory: false,
+      didLose: false,
+      isClickable: true,
     };
-    console.log('[DX][GameBoard] this.props', this.props);
+  }
+  componentDidMount() {
+    window.win = this.forceWin;
+    window.lose = this.forceLose;
   }
 
   /** HANDLERS */
   handleCellClick = payload => {
     const { index, isShift } = payload;
-    const { allCellsData } = this.state;
+    const { allCellsData, winIsTrue, loseIsTrue } = this.state;
     const { onCellClick, onCellExpanded } = this.props;
     const clickedCellData = allCellsData[index];
 
     onCellClick && onCellClick();
+    if (this.state.isClickable) {
+      if (isShift) {
+        this.flagCell(index);
+      }
 
-    if (isShift) {
-      this.flagCell(index);
+      // WAS BOMB
+      else if (clickedCellData.isBomb) {
+        this.doLose();
+        this.setState({ loseIsTrue: true });
+
+        // this.setState({ didLose: true });
+        // console.log('[DX][GameBoard] this.state.didLose', this.state.didLose);
+        // if()
+        // this.uncoverAllBombs();
+        // clickedCellData.isCovered = false;
+      } else if (clickedCellData.isFlagged || winIsTrue || loseIsTrue) {
+        return;
+      }
+
+      // NOT BOMB
+      else {
+        this.numberAndUncoverEmptyNeighbors(index);
+        clickedCellData.isCovered = false;
+        onCellExpanded && onCellExpanded();
+      }
+
+      // const gameIsVictory = true;
+      const gameIsVictory = didWin(allCellsData);
+      if (gameIsVictory) {
+        this.doWin();
+        this.setState({ loseIsTrue: true });
+      }
+      // update state so it renders
+      this.setState({ allCellsData: allCellsData.slice(), gameIsVictory });
     }
-
-    // WAS BOMB
-    else if (clickedCellData.isBomb) {
-      this.uncoverAllBombs();
-      clickedCellData.isCovered = false;
-    }
-
-    // NOT BOMB
-    else {
-      this.numberAndUncoverEmptyNeighbors(index);
-      clickedCellData.isCovered = false;
-      onCellExpanded && onCellExpanded();
-    }
-
-    const gameIsVictory = didWin(allCellsData);
-
-    // update state so it renders
-    this.setState({ allCellsData: allCellsData.slice(), gameIsVictory });
   };
 
   /** CELL WORKERS */
@@ -91,14 +115,13 @@ class GameBoard extends Component {
   flagCell(index) {
     const { allCellsData, totalNumberOfFlags } = this.state;
     const cellData = allCellsData[index];
-    let numberOfBombs = allCellsData.filter(data => data.isBomb).length;
+    // let numberOfBombs = allCellsData.filter(data => data.isBomb).length;
     if (!cellData) return;
-    if (!cellData.isCovered || totalNumberOfFlags >= numberOfBombs) return;
-
+    // LIMIT FLAGS
+    // if (!cellData.isCovered || totalNumberOfFlags >= numberOfBombs) return;
+    // NOOP
     cellData.isFlagged = !cellData.isFlagged;
     this.setState({ totalNumberOfFlags: totalNumberOfFlags + 1 });
-    console.log('[DX][GameBoard] totalNumberOfFlags', totalNumberOfFlags);
-    // this.limitFlags(cellData);
   }
 
   /** IS-ERS */
@@ -121,7 +144,6 @@ class GameBoard extends Component {
 
   /** HELPERS */
   getAllCellData(boardSize) {
-    console.log('[DX][GameBoard] onCellData');
     if (!boardSize) return;
     const allCellsData = [];
     const numberOfCells = Math.pow(boardSize, 2);
@@ -229,9 +251,9 @@ class GameBoard extends Component {
     return totalNumberOfBombs;
   }
   limitFlags(cellDataArray) {
-    if (this.totalNumberOfBombs.filter(total => total.isFlagged) >= 10) {
-      console.log('[DX][GameBoard] too many!');
-    }
+    // if (this.totalNumberOfBombs.filter(total => total.isFlagged) >= 10) {
+    // }
+    // NOOP
   }
   setNumberNear(index) {
     const { allCellsData } = this.state;
@@ -245,35 +267,55 @@ class GameBoard extends Component {
     }
     return bombCount;
   }
-  fullRestart = () => {
-    console.log('[DX][GameBoard] on restart');
-    this.setState({
-      allCellsData: this.getAllCellData(this.props.boardSize),
-      totalNumberOfFlags: 0,
-      gameIsVictory: false,
-    });
-    this.getAllCellData(this.props.boardSize);
+  forceWin = () => {
+    this.doWin();
   };
+  forceLose = () => {
+    this.doLose();
+  };
+  doWin() {
+    this.props.onWin && this.props.onWin();
+    this.setState({ didLose: false, gameIsVictory: true, isClickable: false });
+  }
+  doLose() {
+    this.props.onLose && this.props.onLose();
+    this.uncoverAllBombs();
+    this.setState({ didLose: true, gameIsVictory: false });
+  }
 
   /** RENDERERS */
   render() {
     return (
       <div className={styles.root}>
+        {/* <GameRoute /> */}
         {/* CELLS */}
         {this.renderCells()}
 
         {/* WIN SCREEN */}
-        {this.renderWinScreen()}
+        {/* {this.renderWinScreen()} */}
 
-        {/* RESTART BUTTON */}
-        {this.renderRestartButton()}
+        {/* LOSE SCREEN*/}
+        {/* {this.renderFailScreen()} */}
       </div>
     );
   }
   renderWinScreen() {
     const { gameIsVictory } = this.state;
     if (!gameIsVictory) return null;
-    return <WinScenario />;
+
+    return <div className={styles.win} />;
+  }
+  renderFailScreen() {
+    const { didLose } = this.state;
+
+    if (!didLose) return null;
+    return (
+      <div>
+        {/* RESTART BUTTON */}
+        {this.renderRestartButton()}
+        <LoseScenario />
+      </div>
+    );
   }
   renderCells() {
     const { allCellsData } = this.state;
@@ -294,7 +336,11 @@ class GameBoard extends Component {
   renderRestartButton() {
     return (
       <div>
-        <button type="button" onClick={this.fullRestart}>
+        <button
+          className={styles.restartButton}
+          type="button"
+          onClick={this.props.onFullRestart}
+        >
           Restart
         </button>
       </div>

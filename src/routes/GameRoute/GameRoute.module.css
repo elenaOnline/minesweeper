@@ -1,3 +1,82 @@
 .root {
   font-size: 2em;
 }
+
+.hud {
+  display: flex;
+  /* background-color: rgba(250, 253, 70, 0.473); */
+  font-size: 0.5em;
+  padding: 1em;
+  padding-left: 27%;
+  padding-right: 2em;
+  font-family: monospace;
+}
+
+.gameIntro {
+  opacity: 0.85;
+  padding: 1em;
+
+  font-size: 0.55em;
+  background-color: black;
+  color: white;
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  padding-left: 35%;
+}
+.introButton {
+  font-size: 0.85em;
+  border: black;
+  margin-left: 1.5em;
+  background-color: rgb(250, 253, 70);
+  border-radius: 5px;
+}
+.appTimer {
+  border-width: 4px;
+  border-color: #717171;
+  border-style: ridge;
+  padding-right: 1em;
+  padding-left: 1em;
+}
+
+.boardTimer {
+  border-width: 4px;
+  border-color: #717171;
+  border-style: ridge;
+  padding-right: 1em;
+  padding-left: 1em;
+}
+
+.winCount {
+  border-width: 4px;
+  border-color: #717171;
+  border-style: ridge;
+  padding-right: 1em;
+  padding-left: 1em;
+}
+.lossCount {
+  border-width: 4px;
+  border-color: #717171;
+  border-style: ridge;
+  padding-right: 1em;
+  padding-left: 1em;
+}
+.restartButton {
+  font-size: 0.75em;
+  border-radius: 4px;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  color: white;
+  background: #6a40ff;
+  transition-property: all;
+  transition-duration: 300ms;
+  transition-timing-function: cubic-bezier(0.25, 0.1, 0.65, 0.38);
+  transition-delay: 0s;
+}
+
+.restartButton:hover {
+  font-size: 0.755em;
+  text-shadow: 0 1.5px 1.5px rgba(0, 0, 0, 0.404);
+  color: rgb(0, 0, 0);
+  background: #40ff80;
+  /* padding-left: 0.5em; */
+}
