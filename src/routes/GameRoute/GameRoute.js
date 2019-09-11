@@ -16,6 +16,8 @@ class GameRoute extends Component {
     shouldShowIntro: true,
     totalWins: 0,
     totalLosses: 0,
+    boardSize: 10,
+    numberOfFlagsThatAreNotBeingUsed: 10,
   };
   constructor() {
     super();
@@ -55,6 +57,20 @@ class GameRoute extends Component {
 
   removeIntroButton = () => {
     this.setState({ shouldShowIntro: false });
+  };
+  createNumberOfFlagsUnused = () => {
+    this.setState({ numberOfFlagsThatAreNotBeingUsed: this.state.boardSize });
+    this.findNumberOfFlagsUnused();
+  };
+  findNumberOfFlagsUnused = () => {
+    console.log(
+      '[DX][GameRoute] this.state.numberOfFlagsThatAreNotBeingUsed',
+      this.state.numberOfFlagsThatAreNotBeingUsed
+    );
+    this.setState({
+      numberOfFlagsThatAreNotBeingUsed:
+        this.state.numberOfFlagsThatAreNotBeingUsed - 1,
+    });
   };
 
   /** HANDLERS */
@@ -98,6 +114,7 @@ class GameRoute extends Component {
       handleFullRestart,
       handleOnWin,
       handleOnLose,
+      createNumberOfFlagsUnused,
     } = this;
     const {
       startAppTime,
@@ -105,6 +122,8 @@ class GameRoute extends Component {
       gameBoardId,
       totalWins,
       totalLosses,
+      boardSize,
+      numberOfFlagsThatAreNotBeingUsed,
     } = this.state;
     // display current elapsed time + previous elapsed time
     const secondsInApp = parseInt(
@@ -125,6 +144,10 @@ class GameRoute extends Component {
             {' '}
             Board Timer: {secondsInBoard}{' '}
           </div>
+          <div className={styles.numberOfFlags}>
+            {' '}
+            Number Of Flags Left: {numberOfFlagsThatAreNotBeingUsed}{' '}
+          </div>
         </div>
         {this.renderGameIntro()}
 
@@ -132,11 +155,12 @@ class GameRoute extends Component {
           key={gameBoardId}
           onCellClick={handleOnCellClick}
           onFullRestart={handleFullRestart}
-          boardSize={10}
+          boardSize={boardSize}
           timerstartAppTime={startAppTime}
           timerStartBoardTime={startBoardTime}
           onWin={handleOnWin}
           onLose={handleOnLose}
+          howManyFlagsLeft={createNumberOfFlagsUnused}
         />
         {this.renderWin()}
         {this.renderLose()}

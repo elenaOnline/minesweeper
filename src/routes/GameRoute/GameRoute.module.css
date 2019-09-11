@@ -7,9 +7,10 @@
   /* background-color: rgba(250, 253, 70, 0.473); */
   font-size: 0.5em;
   padding: 1em;
-  padding-left: 27%;
+  padding-left: 17%;
   padding-right: 2em;
   font-family: monospace;
+  background-color: rgba(232, 60, 54, 0.3);
 }
 
 .gameIntro {
@@ -55,6 +56,13 @@
   padding-left: 1em;
 }
 .lossCount {
+  border-width: 4px;
+  border-color: #717171;
+  border-style: ridge;
+  padding-right: 1em;
+  padding-left: 1em;
+}
+.numberOfFlags {
   border-width: 4px;
   border-color: #717171;
   border-style: ridge;

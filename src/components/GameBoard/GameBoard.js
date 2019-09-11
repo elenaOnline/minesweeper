@@ -36,12 +36,16 @@ class GameBoard extends Component {
   handleCellClick = payload => {
     const { index, isShift } = payload;
     const { allCellsData, winIsTrue, loseIsTrue } = this.state;
-    const { onCellClick, onCellExpanded } = this.props;
+    const { onCellClick, onCellExpanded, howManyFlagsLeft } = this.props;
     const clickedCellData = allCellsData[index];
 
     onCellClick && onCellClick();
     if (this.state.isClickable) {
       if (isShift) {
+        if (!clickedCellData.isFlagged) {
+          console.log('[DX][GameBoard] howManyFlagsLeft', howManyFlagsLeft);
+          howManyFlagsLeft && howManyFlagsLeft();
+        }
         this.flagCell(index);
       }
 
