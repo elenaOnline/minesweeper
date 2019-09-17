@@ -10,7 +10,7 @@
   padding-left: 17%;
   padding-right: 2em;
   font-family: monospace;
-  background-color: rgba(232, 60, 54, 0.3);
+  background-color: rgba(46, 196, 182);
 }
 
 .gameIntro {
@@ -18,7 +18,7 @@
   padding: 1em;
 
   font-size: 0.55em;
-  background-color: black;
+  background-color: rgb(1, 22, 39);
   color: white;
   position: fixed;
   bottom: 0px;
@@ -29,8 +29,9 @@
   font-size: 0.85em;
   border: black;
   margin-left: 1.5em;
-  background-color: rgb(250, 253, 70);
+  background-color: rgba(254, 215, 102);
   border-radius: 5px;
+  cursor: pointer;
 }
 .appTimer {
   border-width: 4px;
@@ -74,17 +75,18 @@
   border-radius: 4px;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   color: white;
-  background: #6a40ff;
+  background: rgb(1, 22, 39);
   transition-property: all;
   transition-duration: 300ms;
   transition-timing-function: cubic-bezier(0.25, 0.1, 0.65, 0.38);
   transition-delay: 0s;
+  cursor: pointer;
 }
 
 .restartButton:hover {
   font-size: 0.755em;
   text-shadow: 0 1.5px 1.5px rgba(0, 0, 0, 0.404);
   color: rgb(0, 0, 0);
-  background: #40ff80;
+  background: rgb(232, 60, 54);
   /* padding-left: 0.5em; */
 }

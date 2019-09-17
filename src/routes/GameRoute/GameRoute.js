@@ -73,6 +73,16 @@ class GameRoute extends Component {
     });
   };
 
+  dontShowNansBoard = () => {
+    if (this.state.startBoardTime === undefined) {
+      console.log('[DX][GameRoute] yikes');
+    } else {
+      return;
+    }
+  };
+
+  numberOfFalgsOnBoard = () => {};
+
   /** HANDLERS */
   handleFullRestart = () => {
     this.setState({

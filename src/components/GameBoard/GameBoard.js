@@ -38,7 +38,6 @@ class GameBoard extends Component {
     const { allCellsData, winIsTrue, loseIsTrue } = this.state;
     const { onCellClick, onCellExpanded, howManyFlagsLeft } = this.props;
     const clickedCellData = allCellsData[index];
-
     onCellClick && onCellClick();
     if (this.state.isClickable) {
       if (isShift) {
@@ -53,12 +52,6 @@ class GameBoard extends Component {
       else if (clickedCellData.isBomb) {
         this.doLose();
         this.setState({ loseIsTrue: true });
-
-        // this.setState({ didLose: true });
-        // console.log('[DX][GameBoard] this.state.didLose', this.state.didLose);
-        // if()
-        // this.uncoverAllBombs();
-        // clickedCellData.isCovered = false;
       } else if (clickedCellData.isFlagged || winIsTrue || loseIsTrue) {
         return;
       }
