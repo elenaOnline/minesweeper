@@ -38,6 +38,7 @@ class GameBoard extends Component {
     const { allCellsData, winIsTrue, loseIsTrue } = this.state;
     const { onCellClick, onCellExpanded, howManyFlagsLeft } = this.props;
     const clickedCellData = allCellsData[index];
+    let longPress = 1300;
     onCellClick && onCellClick();
     if (this.state.isClickable) {
       if (isShift) {
@@ -47,6 +48,8 @@ class GameBoard extends Component {
         }
         this.flagCell(index);
       }
+
+      // FIND LENGTH OF PRESS
 
       // WAS BOMB
       else if (clickedCellData.isBomb) {

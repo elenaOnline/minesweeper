@@ -81,6 +81,10 @@
   transition-timing-function: cubic-bezier(0.25, 0.1, 0.65, 0.38);
   transition-delay: 0s;
   cursor: pointer;
+  position: absolute;
+  top: 60%;
+  left: 19.5%;
+  margin-left: 25%;
 }
 
 .restartButton:hover {
